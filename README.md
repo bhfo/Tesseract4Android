@@ -37,13 +37,15 @@ single instance of Tesseract.
 
 You can get compiled version of Tesseract4Android from JitPack.io.
 
-1. Add the JitPack repository to your project root `build.gradle` file at the end of repositories:
+1. Add the JitPack repository to your project root `settings.gradle` file at the end of repositories:
 
 ```gradle
-allprojects {
+dependencyResolutionManagement {
     repositories {
-        ...
-        maven { url 'https://jitpack.io' }
+        maven {
+            ...
+            url = uri("https://jitpack.io")
+        }
     }
 }
 ```
