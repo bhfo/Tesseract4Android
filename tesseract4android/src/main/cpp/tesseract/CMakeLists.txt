@@ -44,6 +44,10 @@ set(GENERIC_MAJOR_VERSION ${VERSION_MAJOR})
 set(GENERIC_MINOR_VERSION ${VERSION_MINOR})
 set(GENERIC_MICRO_VERSION ${VERSION_PATCH})
 
+
+# Avoid race-conditions in parallel builds, since we are writing into a shared source directory
+file(LOCK ${CMAKE_CURRENT_SOURCE_DIR}/cmake.lock GUARD PROCESS TIMEOUT 30)
+
 configure_file(
         ${CMAKE_CURRENT_SOURCE_DIR}/${TESS_INCLUDE_PATH}tesseract/version.h.in
         ${CMAKE_CURRENT_SOURCE_DIR}/${TESS_INCLUDE_PATH}tesseract/version.h @ONLY)
@@ -51,6 +55,9 @@ configure_file(
 configure_file(
         ${CMAKE_CURRENT_SOURCE_DIR}/config_auto.h.in
         ${CMAKE_CURRENT_SOURCE_DIR}/${TESS_PATH}api/config_auto.h @ONLY)
+
+file(LOCK ${CMAKE_CURRENT_SOURCE_DIR}/cmake.lock RELEASE)
+# End of race-conditions
 
 file(GLOB tesseract_src
         ${TESS_PATH}api/*.cpp

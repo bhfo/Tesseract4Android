@@ -30,9 +30,15 @@ set(LEPT_PATH "src/src/")
 set(JPEG_PATH "../libjpeg/src/")
 set(PNG_PATH "../libpng/src/")
 
+# Avoid race-conditions in parallel builds, since we are writing into a shared source directory
+file(LOCK ${CMAKE_CURRENT_SOURCE_DIR}/cmake.lock GUARD PROCESS TIMEOUT 30)
+
 configure_file(
         ${CMAKE_CURRENT_SOURCE_DIR}/endianness.h.in
         ${CMAKE_CURRENT_SOURCE_DIR}/${LEPT_PATH}endianness.h @ONLY)
+
+file(LOCK ${CMAKE_CURRENT_SOURCE_DIR}/cmake.lock RELEASE)
+# End of race-conditions
 
 file(GLOB leptonica_src "${LEPT_PATH}*.c")
 file(GLOB leptonica_hdr "${LEPT_PATH}*.h")
